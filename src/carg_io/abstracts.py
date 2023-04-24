@@ -41,7 +41,7 @@ class MetaParameterSet(type):
         clsdict['_parameters'] = parameters
 
         # Store ParameterSet name # NOTE: may be replaced with __qualname__
-        clsdict['_name'] = clsname
+        clsdict['name'] = clsname
 
         return super().__new__(cls, clsname, bases, clsdict)
 
@@ -147,7 +147,7 @@ class ParameterSet(metaclass=MetaParameterSet):
     
     """#doctag[Parameter-user]
     
-    _name:str
+    name:str
     _parameters:list
     
     LOCK_SETATTR = False
@@ -201,15 +201,12 @@ class ParameterSet(metaclass=MetaParameterSet):
 
     def __setattr__(self, attr, value):
         if self.LOCK_SETATTR and attr in self._parameters:
-            raise SettingAttributeNotAllowed(f'It is not allowed to set {self._name}.{attr} directly. Use {self._name}.{attr}[<unit>] = {value} instead')
+            raise SettingAttributeNotAllowed(f'It is not allowed to set {self.name}.{attr} directly. Use {self.name}.{attr}[<unit>] = {value} instead')
         object.__setattr__(self, attr, value)
 
     def copy(self):
         return deepcopy(self)
-
-    @property
-    def name(self):
-        return self._name
+    
     
     def _to_tk(self, context, state='normal'):
         """Return as tk representation
@@ -242,7 +239,7 @@ class ParameterSet(metaclass=MetaParameterSet):
         """
         fz = []
         for name, parm in self.to_dict().items():
-            fz.append(self._name + name + str(parm.normalized_value))
+            fz.append(self.name + name + str(parm.normalized_value))
         return hash(frozenset(fz))
 
     def get_partial_hash(self, parameter_names:List[str]):
@@ -251,7 +248,7 @@ class ParameterSet(metaclass=MetaParameterSet):
         stack = []
         for name in parameter_names:
             parm = self[name]
-            string = self._name + name + str(parm.normalized_value)
+            string = self.name + name + str(parm.normalized_value)
             stack.append(string)
         return hash(frozenset(stack))
 
