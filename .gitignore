@@ -52,3 +52,8 @@ MANIFEST
 .venv*/
 .conda*/
 .python-version
+
+# More
+*.drawio
+*.pickle
+*.cio

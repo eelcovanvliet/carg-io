@@ -6,7 +6,10 @@ __author__ = "eelco van Vliet"
 __copyright__ = "eelco van Vliet"
 __license__ = "MIT"
 
-    
+class Box(ParameterSet):
+    Length:Parameter = 1 * units.meter
+    Width:Parameter = 1* units.meter
+    Height:Parameter = 1* units.meter
 
 def test_parameter1():
     
@@ -44,10 +47,7 @@ def test_parameter_errors():
     
 def test_hash():
     
-    class Box(ParameterSet):
-        Length:Parameter = 1 * units.meter
-        Width:Parameter = 1* units.meter
-        Height:Parameter = 1* units.meter
+    
 
     box = Box()
     
@@ -63,7 +63,9 @@ def test_hash():
 
     assert box == identical_box
 
-
+def test_pickle():
+    box = Box()
+    file = box.to_pickle()
 
 
 

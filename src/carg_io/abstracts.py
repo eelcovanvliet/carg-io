@@ -1,3 +1,4 @@
+from __future__ import annotations
 import sys
 from abc import ABC, ABCMeta, abstractmethod
 from typing import Set, Callable, List, Dict
@@ -7,6 +8,8 @@ from copy import deepcopy
 import tkinter as tk
 import pint
 from decimal import Decimal
+from pathlib import Path
+import pickle
 units = ureg = pint.UnitRegistry()
 NaN = np.nan
 
@@ -43,16 +46,19 @@ class MetaParameterSet(type):
         return super().__new__(cls, clsname, bases, clsdict)
 
 class Parameter():
-    """The Parameter class facilitates a lot of bookkeeping around a single value.
-    
+    """The Parameter class offers a lot of functionality aound a single value.
+    The value may be an input or an output value.
     It supports both input and output parameters.
     It uses Pint to support units and their conversion.
 
-    - unit support
-    - getting and setting values
-    - default values
-    - tkinter representation
-    - 
+    - Getting and setting values using different units
+    - Store a default value, and remember if it was changed
+    - `Tkinter` `entry` representation
+    
+    ```python
+    from carg_io import Parameter, units
+    height = Parameter('height', 1.93 * units.meter)
+    ```
 
 
     """#doctag[Parameter-user]
@@ -132,6 +138,14 @@ class SettingAttributeNotAllowed(Exception):
 
 
 class ParameterSet(metaclass=MetaParameterSet):
+    """The `ParameterSet` class is a collection of Parameter instances.
+    It offers a lot of functionality such as:
+    
+    - 
+
+
+    
+    """#doctag[Parameter-user]
     
     _name:str
     _parameters:list
@@ -145,7 +159,17 @@ class ParameterSet(metaclass=MetaParameterSet):
             parm = getattr(self, parm_name)
             setattr(self, parm_name, deepcopy(parm))
         self.LOCK_SETATTR = True
-            
+    
+    @staticmethod
+    def from_pickle(file:Path) -> ParameterSet:
+        with open(file, 'rb') as f:
+            content:ParameterSet = pickle.load(f)
+        return content
+
+    @staticmethod
+    def from_serial_pickle(data) -> ParameterSet:
+        content:ParameterSet = pickle.loads(data)
+        return content
 
     def to_dataframe(self):
         stack = []
@@ -158,6 +182,18 @@ class ParameterSet(metaclass=MetaParameterSet):
 
     def to_dict(self) -> Dict[str, Parameter]:
         return {parameter.name:parameter for parameter in self}
+
+    def to_pickle(self, file:Path|None=None) -> Path:
+        if not file:
+            file = Path(self.name).with_suffix('.pickle')
+        else:
+            file = Path(file)
+        
+        with open(file, 'wb') as f:
+            pickle.dump(self, f)
+        
+        return file
+
 
     def __iter__(self) -> Parameter:
         for parm_name in self._parameters:
@@ -175,9 +211,12 @@ class ParameterSet(metaclass=MetaParameterSet):
     def name(self):
         return self._name
     
-    def _to_tk(self, root):
-        """Return as tk representation"""
-        frame = tk.LabelFrame(root, text=self.name, width=100, font=('Helvetica 9 bold'))
+    def _to_tk(self, context, state='normal'):
+        """Return as tk representation
+        context: tk object - object in which to place the entries
+        state: str -  can be disabled, normal, or readonly
+        """
+        frame = tk.LabelFrame(context, text=self.name, width=100, font=('Helvetica 9 bold'))
         
         entries = {}
         for row, parameter in enumerate(self):
@@ -186,6 +225,7 @@ class ParameterSet(metaclass=MetaParameterSet):
             label.grid(row=row, column=0, padx=(2,2), pady=(2,2))
             entry.grid(row=row, column=1, padx=(2,2), pady=(2,2))
             unit.grid(row=row, column=2, padx=(2,2), pady=(2,2))
+            entry.config(state=state)
             entries[parameter.name] = entry
 
         return frame, entries
