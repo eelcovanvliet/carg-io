@@ -211,7 +211,7 @@ class ParameterSet(metaclass=MetaParameterSet):
         stack = []
         for name in parameter_names:
             parm = self[name]
-            string = self._name + name + str(parm._value.m)
+            string = self._name + name + str(parm.normalized_value)
             stack.append(string)
         return hash(frozenset(stack))
 
