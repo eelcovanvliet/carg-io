@@ -235,7 +235,7 @@ class ParameterSet(metaclass=MetaParameterSet):
         return dictionary[name]
 
     def __hash__(self):
-        """Per default, the hash of a SubDesign is a frozenset containing the string representation
+        """Per default, the hash of a ParameterSet is a frozenset containing the string representation
         of the parameter names and their value.
         The unit is NOT included, hence the value should always be represented in the initial
         unit.
