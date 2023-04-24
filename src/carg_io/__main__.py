@@ -16,7 +16,6 @@ target_file = sys.argv[1]
 #     raise SystemExit(1)
 
 print(target_file)
-target_file = target_file.replace('\\\\', '\\')
 cont = MyContainer.load(target_file)
 cont.file_ui()
 

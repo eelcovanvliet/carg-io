@@ -39,6 +39,8 @@ class MyContainer(Container):
         root = tk.Tk()
         
         input_column = tk.LabelFrame(root, text='INPUT', font=('Helvetica 10 bold'))
+        sbi = tk.Scrollbar(input_column, orient = 'vertical')
+        sbi.pack(side=tk.LEFT, fill=tk.Y)
         input_parm = tk.Frame(input_column, width=360, height=520)
         for inp in self.input:
             frame, entries = inp._to_tk(input_parm, state='disabled')
