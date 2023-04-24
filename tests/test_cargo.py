@@ -33,6 +33,7 @@ def test_container_io():
     cont.save(TEMP / 'aaa.cio')
 
     aaa = MyContainer.load(TEMP / 'aaa.cio')
+    
 
 
 
