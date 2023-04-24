@@ -1,11 +1,12 @@
 import sys
 from abc import ABC, ABCMeta, abstractmethod
-from typing import Set, Callable, List
+from typing import Set, Callable, List, Dict
 import pandas as pd
 import numpy as np
 from copy import deepcopy
 import tkinter as tk
 import pint
+from decimal import Decimal
 units = ureg = pint.UnitRegistry()
 NaN = np.nan
 
@@ -79,6 +80,15 @@ class Parameter():
         self._unit_default = value.u # default unit
         self.is_default = True
 
+    @property
+    def normalized_value(self) -> float|int:
+        """The normalized value of a `Parameter` is the value represented in the default unit.
+        Any resulting zero decimals (as result of a unit conversion) are dropper (normalized).
+        """#doctag[normalized_value]
+        value = self._value.m_as(self._unit_default)
+        nvalue = Decimal(value).normalize()
+        return nvalue
+
     def __getitem__(self, unit:str):
         """Get the value in the requested unit. For dimensionless units, use
         Parameter[None] or Parameter[:].
@@ -113,6 +123,9 @@ class Parameter():
         unit_label = tk.Label(root, text=unit, anchor="w", width=17)
         return name_label, entry, unit_label
 
+    def __repr__(self):
+        return f"Parameter(name='{self.name}'', value={self._value})"
+
 
 class SettingAttributeNotAllowed(Exception):
     pass
@@ -143,7 +156,7 @@ class ParameterSet(metaclass=MetaParameterSet):
         df = pd.DataFrame(stack, columns='name value unit is_default'.split())
         return df
 
-    def to_dict(self):
+    def to_dict(self) -> Dict[str, Parameter]:
         return {parameter.name:parameter for parameter in self}
 
     def __iter__(self) -> Parameter:
@@ -187,8 +200,9 @@ class ParameterSet(metaclass=MetaParameterSet):
         The unit is NOT included, hence the value should always be represented in the initial
         unit.
         """
-        
-        fz = {self._name + name + str(parm._value.m) for name, parm in self.to_dict().items()}
+        fz = []
+        for name, parm in self.to_dict().items():
+            fz.append(self._name + name + str(parm.normalized_value))
         return hash(frozenset(fz))
 
     def get_partial_hash(self, parameter_names:List[str]):

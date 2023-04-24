@@ -53,7 +53,7 @@ def test_hash():
     
     box.Height['m'] = 99
     
-
+    
     identical_box = Box()
     
     identical_box.Height['mm'] = 99_000
