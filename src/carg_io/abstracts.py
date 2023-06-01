@@ -35,6 +35,8 @@ class MetaParameterSet(type):
         
         for name, val in clsdict.items():
             if not name.startswith('_'):
+                if isinstance(val, property):
+                    continue # @property may be used to create dependent Parameter
                 clsdict[name] = Parameter(name, val) # Value->Parameter substitution
                 parameters.append(name)
                 
