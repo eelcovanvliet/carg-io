@@ -152,12 +152,13 @@ class ParameterSet(metaclass=MetaParameterSet):
     
     LOCK_SETATTR = False
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         
         # Make copies of the default parameter instances
         for parm_name in self._parameters:
             parm = getattr(self, parm_name)
             setattr(self, parm_name, deepcopy(parm))
+        
         self.LOCK_SETATTR = True
     
     @staticmethod
@@ -245,6 +246,7 @@ class ParameterSet(metaclass=MetaParameterSet):
             fz.append(self.name + name + str(parm.normalized_value))
         return hash(frozenset(fz))
 
+
     def get_partial_hash(self, parameter_names:List[str]):
         if not isinstance(parameter_names, (set, list, tuple)):
             raise TypeError(f"'parameter_names' must be a list, set or tuple. Got {type(parameter_names)}")
@@ -259,4 +261,49 @@ class ParameterSet(metaclass=MetaParameterSet):
 
     
     
+
+class ParameterSetCombination(ABC):
+    """Abstract base class for parameterset combinations (PSC)
     
+    The total input may consist of mulitple parameter sets, but with different combinatons.
+
+    E.g. a ParameterSetCombination "Vehicle" may consist of a choice between ParametersSets "Wheels" or "Tracks"
+    and "Sedan" or "Convertible". (possibly, a single ParameterSet could also be allowed)
+    
+    
+    PSCs may have their own adapter during a certain process, i.e. a process may follow a different path for a 
+    specific combination of PSs. For example:
+        PSC (Wheels, Sedan) may have respond to a function "inflate tires", whereas (Tracks, Sedan) does not.
+
+
+    PSCs may also contain dependent Parameters, i.e. Parameters that are shared among all combinations but follow
+    from their independent Parameters in a different manner. For example:
+        Wheels and Tracks may both return the total number of wheels they have, even though it may be dependent
+        on the length of the Vehicle.
+        
+    """
+    def __init__(self, psets:List[ParameterSet]):
+        self.psets = psets
+
+    def __getitem__(self, pset_type:ParameterSet) -> ParameterSet:
+        insts = list(filter(lambda x: isinstance(x, pset_type), self.psets))
+        if len(insts)==1:
+            return insts[0]
+        if not insts:
+            raise ValueError(f'No parameter sets match {pset_type}')
+        return insts
+
+    def copy(self) -> ParameterSet:
+        return deepcopy(self)
+
+    def to_dataframe(self):
+        stack = [pset.to_dataframe() for pset in self.pset_types]
+        df = pd.concat(stack, axis=0)
+        return df
+    
+    
+    
+    @property
+    def SUPPORTS(self) -> List[ParameterSet]:
+        """Return as list of ParameterSet combinations that the class supports."""
+        ...
