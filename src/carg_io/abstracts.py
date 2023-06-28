@@ -173,13 +173,16 @@ class ParameterSet(metaclass=MetaParameterSet):
         content:ParameterSet = pickle.loads(data)
         return content
 
-    def to_dataframe(self):
+    def to_dataframe(self, include_set_name=False):
         stack = []
         for parameter in self:
             p:pint.Quantity = parameter._value
             # value = p.m if p.m < 1 else round(p.m,2) # FIXME: does not work for arrays
             stack.append((parameter.name, p.m, str(p.u), parameter.is_default))
+        
         df = pd.DataFrame(stack, columns='name value unit is_default'.split())
+        if include_set_name:
+            df.name = (self.name + '.') + df.name
         return df
 
     def to_dict(self) -> Dict[str, Parameter]:
