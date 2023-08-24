@@ -4,6 +4,8 @@ from carg_io.abstracts import Parameter, ParameterSet, units, NaN
 from carg_io.implementations import MyContainer, Box, BoxResults
 from carg_io.postprocessing import Analyze
 from random import randint
+import numpy as np
+import itertools
 
 __author__ = "eelco van Vliet"
 __copyright__ = "eelco van Vliet"
@@ -23,25 +25,51 @@ def test_post_process():
         Height:Parameter = 1* units.meter
 
     class BoxO(ParameterSet):
-        Mass:Parameter = 1 * units.meter
-        Volume:Parameter = 1* units.meter
-        
-    def create_io():
-        boxi = BoxI()
-        for parameter in boxi:
-            unit = parameter._unit_default
-            parameter[unit] = randint(0,10)
-        
-        boxo = BoxO()
-        for parameter in boxo:
-            unit = parameter._unit_default
-            parameter[unit] = randint(0,10)
-        return [boxi, boxo]
+        Mass:Parameter = 1 * units.kg
+        Volume:Parameter = 1 * units.meter**3
+        WeldLength:Parameter = 1 * units.meter
     
-    aaa = [create_io() for ix in range(10)]
 
-    aaa = Analyze(aaa)
-    aaa.get_double_scatter(show=True)
+
+    def create_input_space():
+        space = {
+            "Length": np.linspace(2, 10, 10),
+            "Width": np.linspace(2, 10, 10),
+            "Height": np.linspace(2, 10, 10),
+        }
+
+        input = []
+        for length, width, height in itertools.product(*space.values()):
+            boxi = BoxI()
+            boxi.Length['m'] = length
+            boxi.Width['m'] = width
+            boxi.Height['m'] = height
+            input.append(boxi)
+        return input
+
+        
+    def calculation(inputs):
+        aaa = []
+        for i in inputs:
+            i:BoxI
+            o = BoxO()
+            l = i.Length['m']
+            w = i.Width['m']
+            h = i.Height['m']
+            o.Volume['m**3'] = l * w * h
+            o.WeldLength['m'] = 4 * (l + w + h)
+            o.Mass['kg'] = l * w * h * 7850
+            aaa.append([i, o])
+
+        return aaa
+    
+
+
+    aaa = create_input_space()
+    bbb = calculation(aaa)
+
+    analysis = Analyze(bbb)
+    analysis.get_double_scatter(show=True)
 
 
 
