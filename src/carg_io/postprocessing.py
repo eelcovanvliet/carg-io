@@ -7,7 +7,7 @@ from bokeh.transform import linear_cmap
 from bokeh.palettes import Spectral6, Spectral11, Turbo256
 
 from bokeh.layouts import row, column
-from bokeh.models import DataTable, DateFormatter, TableColumn, ColorBar
+from bokeh.models import DataTable, DateFormatter, TableColumn, ColorBar, Circle
 from bokeh.io import show as show_in_bokeh
 from .abstracts import ParameterSet, Parameter, units
 from typing import List
@@ -98,6 +98,9 @@ class Analyze():
                              fill_color=mapper, 
                              line_width=1)
         
+        # The non-selected item should have constrasting color and a large alpha.
+        scatter.nonselection_glyph = Circle(fill_color='pink', fill_alpha=0.75, line_color=None)
+
         ppp.xaxis.axis_label = x_start
         ppp.yaxis.axis_label = y_start
         
