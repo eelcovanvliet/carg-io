@@ -1,7 +1,7 @@
 from __future__ import annotations
 import sys
 from abc import ABC, ABCMeta, abstractmethod
-from typing import Set, Callable, List, Dict
+from typing import Set, Callable, List, Dict, Tuple
 import pandas as pd
 import numpy as np
 from copy import deepcopy
@@ -98,7 +98,7 @@ class Parameter():
         return nvalue
 
 
-    def __getitem__(self, unit:str|pint.Unit):
+    def __getitem__(self, unit:str|pint.Unit) -> pint.Quantity:
         """Get the value in the requested unit. For dimensionless units, use
         Parameter[None] or Parameter[:].
         """
@@ -107,12 +107,16 @@ class Parameter():
         return self._value.m_as(unit)
 
     def __setitem__(self, unit:str|pint.Unit, value:float or int):
+        """Set the value with the requested unit. For dimensionless units, use
+        Parameter[None] or Parameter[:].
+        """
         self._value = ureg.Quantity(value, unit)
         self.is_default = False
 
 
-    def _to_tk(self, root):
-        """Return tkinter representation
+    def _to_tk(self, root) -> Tuple[tk.Label, tk.Entry, tk.Labe ]:
+        """Return tkinter representation consiting of 2 labels (name and unit)
+        and an entry field.
         
         Input:
             tkinter container entity
@@ -141,14 +145,9 @@ class SettingAttributeNotAllowed(Exception):
 
 
 class ParameterSet(metaclass=MetaParameterSet):
-    """The `ParameterSet` class is a collection of Parameter instances.
-    It offers a lot of functionality such as:
+    """The ParameterSet class represents a collection of Parameter instances.
     
-    - 
-
-
-    
-    """#doctag[Parameter-user]
+    """
     
     name:str
     _parameters:list
@@ -174,7 +173,16 @@ class ParameterSet(metaclass=MetaParameterSet):
         content:ParameterSet = pickle.loads(data)
         return content
 
-    def to_dataframe(self, include_set_name=False):
+    def to_dataframe(self, include_set_name=False) -> pd.DataFrame:
+        """Return the dictionary representation of the instance.
+        
+        Parameters:
+            include_set_name:bool
+                If true, prepend the ParameterSet name to its Parameter names.
+                This is useful when concatenating multiple ParameterSets with 
+                overlapping Parameter names. Default is False.
+                
+        """
         stack = []
         for parameter in self:
             p:pint.Quantity = parameter._value
@@ -187,9 +195,11 @@ class ParameterSet(metaclass=MetaParameterSet):
         return df
 
     def to_dict(self) -> Dict[str, Parameter]:
+        """Return the dictionary representation of the instance."""
         return {parameter.name:parameter for parameter in self}
 
     def to_pickle(self, file:Path|None=None) -> Path:
+        """Export the instance to a file in pickle format."""
         if not file:
             file = Path(self.name).with_suffix('.pickle')
         else:
@@ -200,8 +210,8 @@ class ParameterSet(metaclass=MetaParameterSet):
         
         return file
 
-
     def __iter__(self) -> Parameter:
+        """Iterate through the parameters"""
         for parm_name in self._parameters:
             yield getattr(self, parm_name)
 
@@ -210,7 +220,8 @@ class ParameterSet(metaclass=MetaParameterSet):
             raise SettingAttributeNotAllowed(f'It is not allowed to set {self.name}.{attr} directly. Use {self.name}.{attr}[<unit>] = {value} instead')
         object.__setattr__(self, attr, value)
 
-    def copy(self):
+    def copy(self) -> ParameterSet:
+        """Return a deepcopy of self."""
         return deepcopy(self)
     
     
@@ -237,7 +248,7 @@ class ParameterSet(metaclass=MetaParameterSet):
         dictionary = self.to_dict()
         return dictionary[name]
 
-    def __hash__(self):
+    def __hash__(self) -> hash:
         """Per default, the hash of a ParameterSet is a frozenset containing the string representation
         of the parameter names and their value.
         The unit is NOT included, hence the value should always be represented in the initial
@@ -248,7 +259,9 @@ class ParameterSet(metaclass=MetaParameterSet):
             fz.append(self.name + name + str(parm.normalized_value))
         return hash(frozenset(fz))
 
-    def get_partial_hash(self, parameter_names:List[str]):
+    def get_partial_hash(self, parameter_names:List[str]) -> hash:
+        """Return the hash based on only the parameter names provided.
+        """
         if not isinstance(parameter_names, (set, list, tuple)):
             raise TypeError(f"'parameter_names' must be a list, set or tuple. Got {type(parameter_names)}")
         stack = []
