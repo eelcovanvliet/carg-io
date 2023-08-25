@@ -12,11 +12,6 @@ if __name__ == "__main__":
     try:
         setup(
             use_scm_version={"version_scheme": "no-guess-dev"},
-            install_requires=[
-                'pandas',
-                'numpy',
-                'Pint',
-            ]
             )
     except:  # noqa
         print(
