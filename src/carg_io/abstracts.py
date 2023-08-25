@@ -97,7 +97,8 @@ class Parameter():
         nvalue = Decimal(value).normalize()
         return nvalue
 
-    def __getitem__(self, unit:str):
+
+    def __getitem__(self, unit:str|pint.Unit):
         """Get the value in the requested unit. For dimensionless units, use
         Parameter[None] or Parameter[:].
         """
@@ -105,7 +106,7 @@ class Parameter():
             return self._value.m
         return self._value.m_as(unit)
 
-    def __setitem__(self, unit:str, value:float or int):
+    def __setitem__(self, unit:str|pint.Unit, value:float or int):
         self._value = ureg.Quantity(value, unit)
         self.is_default = False
 
