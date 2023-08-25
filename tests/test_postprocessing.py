@@ -27,7 +27,11 @@ def test_post_process():
     class BoxO(ParameterSet):
         Mass:Parameter = 1 * units.kg
         Volume:Parameter = 1 * units.meter**3
-        WeldLength:Parameter = 1 * units.meter
+        EdgeLength:Parameter = 1 * units.meter
+        SurfaceArea:Parameter = 1 * units.meter**2
+        MomentOfInertiaY:Parameter = 1 * units.meter**4
+        DeflectionPerkN:Parameter = 1 * units.meter
+
     
 
 
@@ -57,8 +61,12 @@ def test_post_process():
             w = i.Width['m']
             h = i.Height['m']
             o.Volume['m**3'] = l * w * h
-            o.WeldLength['m'] = 4 * (l + w + h)
+            o.EdgeLength['m'] = 4 * (l + w + h)
             o.Mass['kg'] = l * w * h * 7850
+            o.SurfaceArea['m**2'] = 2*(l*h + h*w + w*l)
+            I = o.MomentOfInertiaY['m**4'] = 1/12*w*h**3
+            E = 210e9
+            o.DeflectionPerkN['mm'] = 1e3*l/(48*E*I)*1e3
             aaa.append([i, o])
 
         return aaa
