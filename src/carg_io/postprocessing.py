@@ -114,8 +114,8 @@ class Analyze():
         var s2 = source2
         
         // impose the selected value to the other
-        ind1 = s1.selected.indices
-        ind2 = s2.selected.indices
+        var ind1 = s1.selected.indices
+        var ind2 = s2.selected.indices
         
         
         if (ind2.length == 0) {
@@ -238,7 +238,7 @@ class Analyze():
         source2 = ColumnDataSource(df)
 
         scat1 = self.get_single_scatter(source1, source2, show=False)
-        scat2 = self.get_single_scatter(source1, source2, show=False)
+        scat2 = self.get_single_scatter(source2, source1, show=False)
         scatters = row(scat1, scat2)
         if show:
             show_in_bokeh(scatters)
