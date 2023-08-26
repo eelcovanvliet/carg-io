@@ -75,10 +75,18 @@ class Analyze():
         df = pd.concat(aa, axis=1).T
         return df
 
-    def get_single_scatter(self, source1, source2, show=False):
-        """Return an interactive scatter for the current sets."""
-
+    def _get_single_scatter(self, source1:ColumnDataSource, source2:ColumnDataSource, show=False) -> column:
+        """Return an interactive scatter for the current sets.
         
+        Input:
+            source1:ColumnDataSource
+
+
+        Returns:
+            A bokeh column[ row[Select, Select, Select]], figure]
+        
+        
+        """
         ppp = figure(tools="pan,wheel_zoom,box_zoom,box_select,tap,undo,reset,save")
        
         ppp.toolbar.logo = None
@@ -228,7 +236,11 @@ class Analyze():
 
         return col
 
-    def get_double_scatter(self, show=False):
+    def get_double_scatter(self, show=False) -> row:
+        """Return an interactive double scatter using Bokeh.
+        A double scatter is a convenient way of navigating and filtering large parameteric
+        data sets.
+        """
 
         df = self._sets_to_dataframe()
         df = df.astype(float)
@@ -237,8 +249,8 @@ class Analyze():
         source1 = ColumnDataSource(df)
         source2 = ColumnDataSource(df)
 
-        scat1 = self.get_single_scatter(source1, source2, show=False)
-        scat2 = self.get_single_scatter(source2, source1, show=False)
+        scat1 = self._get_single_scatter(source1, source2, show=False)
+        scat2 = self._get_single_scatter(source2, source1, show=False)
         scatters = row(scat1, scat2)
         if show:
             show_in_bokeh(scatters)
