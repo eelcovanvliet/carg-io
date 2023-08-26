@@ -1,10 +1,6 @@
-
-
-
 from .abstracts import ParameterSet, Parameter, units
 import itertools
 from typing import Iterable
-import numpy as np
 
 class Space:
     """Space facilitates constructing large parameter input spaces"""
@@ -63,25 +59,4 @@ class Space:
 
 if __name__ == "__main__":
     
-    class Box(ParameterSet):
-        Length:Parameter = 1 * units.meter
-        Width:Parameter = 1* units.meter
-        Height:Parameter = 1* units.meter
-
-        @property
-        def Volume(self) -> Parameter:
-            l = self.Length['m']
-            w = self.Width['m']
-            h = self.Height['m']
-            return Parameter('Volume', l*w*h*units.meter**3)
-
-    
-    space = Space(Box)
-    space.expand(Box.Length, 'm', np.linspace(1,10,10))
-    space.expand(Box.Width, 'm', np.linspace(1,10,10))
-    space.expand(Box.Height, 'm', np.linspace(1,10,10))
-
-    space._criteria.append(("Volume", 'm**3', lambda v: v < 6**3))
-
-    aaa = space.construct()
-    aaa=1
+    pass
