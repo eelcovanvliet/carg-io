@@ -1,6 +1,6 @@
 from .abstracts import ParameterSet, Parameter, units
 import itertools
-from typing import Iterable
+from typing import Iterable, List, Tuple, Dict
 
 class Space:
     """Space facilitates constructing large parameter input spaces"""
@@ -16,7 +16,12 @@ class Space:
             parameter = parameter.name
         self._expansions.append((parameter, unit, space))
 
-    def construct(self):
+    def add_criteria(self, parameter:str|Parameter, unit:str, f):
+        if isinstance(parameter, Parameter):
+            parameter = parameter.name
+        self._criteria.append((parameter, unit, f))
+
+    def construct(self) -> List[ParameterSet]:
         """Construct the space based on the expansions and criteria"""
         parameters = [exp[0] for exp in self._expansions]
         units = [exp[1] for exp in self._expansions]
@@ -38,7 +43,7 @@ class Space:
         return filtered_space
 
     def __len__(self):
-        return len(space)
+        return len(self.construct())
     
         
     def __iter__(self):

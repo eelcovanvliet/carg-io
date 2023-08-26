@@ -27,9 +27,14 @@ def test_space():
     space.expand(Box.Width, 'm', np.linspace(1,10,10))
     space.expand(Box.Height, 'm', np.linspace(1,10,10))
 
-    space._criteria.append(("Volume", 'm**3', lambda v: v < 6**3))
+    space.add_criteria("Volume", 'm**3', lambda v: v < 10*10*9)
 
-    aaa = space.construct()
-    aaa=1
+    # There should be four cases that will not pass this criteria:
+    # everything 10 m, or any combination of two parameters being 10 m.
+    # = 4 cases
+
+
+    assert len(space) == 10**3-4
+    
 
 
