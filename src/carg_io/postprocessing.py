@@ -98,8 +98,8 @@ class Analyze():
         x_start = tags[0]
         y_start = tags[1]
 
-        scatter = ppp.circle(x="Length", 
-                             y="Width",
+        scatter = ppp.circle(x=x_start, 
+                             y=y_start,
                              color=mapper,
                              source=source1,
                              size=10,
