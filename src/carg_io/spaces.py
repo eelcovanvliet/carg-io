@@ -9,6 +9,8 @@ class Space:
     _criteria = []
 
     def __init__(self, parameter_set:ParameterSet) -> None:
+        # if not issubclass(type(parameter_set), ParameterSet):
+        #     raise TypeError(f'Expected ParameterSet, got {type(parameter_set)}')
         self.parameter_set = parameter_set
 
     def expand(self, parameter:str|Parameter, unit:str, space:Iterable[float|int]):
@@ -27,6 +29,7 @@ class Space:
         units = [exp[1] for exp in self._expansions]
         iterables = [exp[2] for exp in self._expansions]
 
+        # Expand space
         space = []
         for values in itertools.product(*iterables):
             ps = self.parameter_set()
@@ -34,13 +37,17 @@ class Space:
                 getattr(ps, parameter)[unit] = value
             space.append(ps)
 
-        filtered_space = []
-        for crit, point in itertools.product(self._criteria, space):
-            parameter, unit, criteria = crit
-            value = getattr(point, parameter)[unit]
-            if criteria(value):
-                filtered_space.append(point)
-        return filtered_space
+        # Filter space
+        if not self._criteria:
+            return space
+        else:
+            filtered_space = []
+            for crit, point in itertools.product(self._criteria, space):
+                parameter, unit, criteria = crit
+                value = getattr(point, parameter)[unit]
+                if criteria(value):
+                    filtered_space.append(point)
+            return filtered_space
 
     def __len__(self):
         return len(self.construct())
