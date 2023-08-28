@@ -1,7 +1,7 @@
 .. _readme:
 
 =========
-Overview
+Basic use
 =========
 
 .. include:: ../README.rst

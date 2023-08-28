@@ -1,16 +1,16 @@
 **carg-io** is a framework facilitating parameteric analyses.
 Current features are:
 
-* Unit conversion (using **Pint**)
+* Unit conversion
 * Assigning default values
 * Linting and autocompletion
 * Quickly create parameter spaces
 * Hashing
 * Iteration
-* Representations for `pandas.dataframe` and `tkinter`
+* Representations in `pandas.dataframe` and `tkinter`
 * Visualization of input and output **ParameterSets**
 
-Basic Use
+Defining parameters
 ====================
 
 A basic example of how to using **carg-io** is shown below using a "Box" with some input and output **ParameterSets**
@@ -96,6 +96,7 @@ their value is set directly and can be readily changed.
         Height:Parameter = 1 * units.meter
         Density:Parameter = 2 * units.kilogram / units.meter**3
 
+        @property
         def Volume(self) -> Parameter:
             l = self.Length['m']
             w = self.Width['m']

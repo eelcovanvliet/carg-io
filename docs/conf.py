@@ -20,6 +20,7 @@ __location__ = os.path.dirname(__file__)
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.join(__location__, "../src"))
 
+
 # -- Run sphinx-apidoc -------------------------------------------------------
 # This hack is necessary since RTD does not issue `sphinx-apidoc` before running
 # `sphinx-build -b html . _build/html`. See Issue:
@@ -35,8 +36,15 @@ except ImportError:
 
 output_dir = os.path.join(__location__, "api")
 module_dir = os.path.join(__location__, "../src/carg_io")
+build_dir = os.path.join(__location__, "_build")
+
 try:
     shutil.rmtree(output_dir)
+except FileNotFoundError:
+    pass
+
+try:
+    shutil.rmtree(build_dir)
 except FileNotFoundError:
     pass
 
@@ -63,7 +71,7 @@ except Exception as e:
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = [
     "sphinx.ext.autodoc",
-    "sphinx.ext.intersphinx",
+    # "sphinx.ext.intersphinx",
     "sphinx.ext.todo",
     "sphinx.ext.autosummary",
     "sphinx.ext.viewcode",
