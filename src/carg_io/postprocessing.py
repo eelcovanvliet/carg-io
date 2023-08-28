@@ -218,7 +218,6 @@ class Analyze():
             }}
             
             source1.change.emit();
-            indaaa = source1.selected.indices
     
         """
         
