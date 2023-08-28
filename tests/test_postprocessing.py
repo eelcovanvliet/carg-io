@@ -71,12 +71,10 @@ def test_post_process():
 
         return aaa
     
+    design_sapce = create_input_space()
+    result_space = calculation(design_sapce)
 
-
-    aaa = create_input_space()
-    bbb = calculation(aaa)
-
-    analysis = Analyze(bbb)
+    analysis = Analyze(result_space)
     analysis.get_double_scatter(show=True)
 
 

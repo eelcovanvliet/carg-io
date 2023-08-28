@@ -61,13 +61,8 @@ class Parameter():
     from carg_io import Parameter, units
     height = Parameter('height', 1.93 * units.meter)
     ```
-
-
-    """#doctag[Parameter-user]
     """
 
-
-    """#doctag[Parameter-dev]
     
     def __init__(self, name, value: pint.Quantity or float or int):
         """Create a Parameter instance with value.
