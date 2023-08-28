@@ -65,7 +65,7 @@ class Analyze():
         for ix, set in enumerate(sets):
             series = []
             for s in set:
-                df = s.to_dataframe() 
+                df = s.to_dataframe(name_include_unit=True) 
                 df.set_index('name', inplace=True, drop=True)
                 sr = df.value
                 series.append(sr)

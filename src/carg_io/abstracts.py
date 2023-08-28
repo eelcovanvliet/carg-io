@@ -173,7 +173,7 @@ class ParameterSet(metaclass=MetaParameterSet):
         content:ParameterSet = pickle.loads(data)
         return content
 
-    def to_dataframe(self, include_set_name=False) -> pd.DataFrame:
+    def to_dataframe(self, include_set_name=False, name_include_unit=False) -> pd.DataFrame:
         """Return the dictionary representation of the instance.
         
         Parameters:
@@ -181,17 +181,22 @@ class ParameterSet(metaclass=MetaParameterSet):
                 If true, prepend the ParameterSet name to its Parameter names.
                 This is useful when concatenating multiple ParameterSets with 
                 overlapping Parameter names. Default is False.
-                
+
         """
         stack = []
         for parameter in self:
             p:pint.Quantity = parameter._value
             # value = p.m if p.m < 1 else round(p.m,2) # FIXME: does not work for arrays
-            stack.append((parameter.name, p.m, str(p.u), parameter.is_default))
+            unit = format(p.u, '~').replace(' ', '') # unit symbol without spaces
+            stack.append((parameter.name, p.m, unit, parameter.is_default))
         
         df = pd.DataFrame(stack, columns='name value unit is_default'.split())
         if include_set_name:
             df.name = (self.name + '.') + df.name
+
+        if name_include_unit:
+            df.name = df.name + ' [' + df.unit + ']'
+
         return df
 
     def to_dict(self) -> Dict[str, Parameter]:
