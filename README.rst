@@ -4,6 +4,7 @@ Current features are:
 * Unit conversion (using **Pint**)
 * Assigning default values
 * Linting and autocompletion
+* Quickly create parameter spaces
 * Hashing
 * Iteration
 * Representations for `pandas.dataframe` and `tkinter`
@@ -105,11 +106,38 @@ Dependent parameters may be considered as an output parameters that is easily co
 
 
 
+Parameter spaces
+===================
+
+Typically, an analysis will span a wide range (or "space") of values for each parameter.
+**carg-io.spaces** offers functionality to achieve that quickly. A **Space** supports expanding 
+and filtering the parameters in a certain direction.
+
+.. warning::
+
+    **Caution**: spaces have the capacity to quickly outgrow any compuation resource.
+    It's important to limit the number of variations to a manageable amount.
+
+.. code-block::
+
+    from carg-io.spaces import Space
+
+    space = Space(Box)
+    space.expand(Box.Length, 'm', np.linspace(1,10,10))
+    space.expand(Box.Width, 'm', np.linspace(1,10,10))
+    space.expand(Box.Height, 'm', np.linspace(1,10,10))
+
+    space.add_criteria("Volume", 'm**3', lambda v: v < 10*10*9)
+
+
+
+
 Equality and Hashing
 ===========================
 
 When dealing with multiple **ParameterSets**, equality is defined when all its **Parameters** have the same
-value when converted to the same unit. 
+value when converted to the same unit.
+
 
 .. code-block::
 
