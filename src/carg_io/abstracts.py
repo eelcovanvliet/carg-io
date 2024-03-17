@@ -1,7 +1,7 @@
 from __future__ import annotations
 import sys
 from abc import ABC, ABCMeta, abstractmethod
-from typing import Set, Callable, List, Dict, Tuple
+from typing import Set, Callable, List, Dict, Tuple, Generator
 import pandas as pd
 import numpy as np
 from copy import deepcopy
@@ -64,7 +64,7 @@ class Parameter():
     """
 
     
-    def __init__(self, name, value: pint.Quantity or float or int):
+    def __init__(self, name, value: pint.Quantity|float|int):
         """Create a Parameter instance with value.
 
         value: Either a pint.Quantity, int or float. If int or float, the value will be
@@ -101,7 +101,7 @@ class Parameter():
             return self._value.m
         return self._value.m_as(unit)
 
-    def __setitem__(self, unit:str|pint.Unit, value:float or int):
+    def __setitem__(self, unit:str|pint.Unit, value:float|int):
         """Set the value with the requested unit. For dimensionless units, use
         Parameter[None] or Parameter[:].
         """
@@ -210,7 +210,7 @@ class ParameterSet(metaclass=MetaParameterSet):
         
         return file
 
-    def __iter__(self) -> Parameter:
+    def __iter__(self) -> Generator[Parameter]:
         """Iterate through the parameters"""
         for parm_name in self._parameters:
             yield getattr(self, parm_name)
