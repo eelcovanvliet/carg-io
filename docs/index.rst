@@ -11,6 +11,7 @@ Contents
    :maxdepth: 2
 
    Basic use <readme>
+   Developer notes <dev-notes>
    Contributions & Help <contributing>
    License <license>
    Authors <authors>

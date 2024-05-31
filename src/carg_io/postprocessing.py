@@ -10,7 +10,7 @@ from bokeh.layouts import row, column
 from bokeh.models import DataTable, DateFormatter, TableColumn, ColorBar, Circle
 from bokeh.io import show as show_in_bokeh
 from .abstracts import ParameterSet, Parameter, units
-from typing import List
+from typing import List, Type
 import pandas as pd
 
 
@@ -37,12 +37,12 @@ class Analyze():
     
     """
 
-    def __init__(self, sets:List[List[ParameterSet]]) -> None:
+    def __init__(self, sets:List[List[Type[ParameterSet]]]) -> None:
         self._check_sets(sets)
         self.sets = sets
 
     @staticmethod
-    def _check_sets(sets:List[List[ParameterSet]]):
+    def _check_sets(sets:List[List[Type[ParameterSet]]]):
         """Check whether all input is correct"""
         for set in sets:
             for s in set:
@@ -229,7 +229,7 @@ class Analyze():
         cselect = Select(title="Color:", options=color_tags, value='None')
         cselect.js_on_change('value', chandler)
         
-        col = column(row(xselect, yselect, cselect), ppp)
+        col = column(column(xselect, yselect, cselect), ppp)
         if show:
             show_in_bokeh(col)
 

@@ -105,6 +105,12 @@ class Parameter():
         """Set the value with the requested unit. For dimensionless units, use
         Parameter[None] or Parameter[:].
         """
+        # Check dimensionality
+        try:
+            self._value.m_as(unit)
+        except pint.errors.DimensionalityError:
+            raise ValueError(f"Trying to set {str(unit)} on parameter {self.name} that has base unit {str(self._unit_default)}")
+
         self._value = ureg.Quantity(value, unit)
         self.is_default = False
 
