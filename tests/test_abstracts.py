@@ -1,15 +1,11 @@
 import pytest
 from carg_io.abstracts import Parameter, ParameterSet, units, NaN
-
+from conftest import Box
 
 __author__ = "eelco van Vliet"
 __copyright__ = "eelco van Vliet"
 __license__ = "MIT"
 
-class Box(ParameterSet):
-    Length:Parameter = 1 * units.meter
-    Width:Parameter = 1* units.meter
-    Height:Parameter = 1* units.meter
 
 def test_parameter1():
     
@@ -19,26 +15,13 @@ def test_parameter1():
     assert height['mm'] == 8000
 
 
-
 def test_parameter_set():
-    
-    class Box(ParameterSet):
-        Length:Parameter = 1 * units.meter
-        Width:Parameter = 1* units.meter
-        Height:Parameter = 1* units.meter
 
     box = Box()
     assert box.Length['km'] == 1e-3
     
     
-
 def test_parameter_errors():
-    
-    class Box(ParameterSet):
-        Length:Parameter = 1 * units.meter
-        Width:Parameter = 1* units.meter
-        Height:Parameter = 1* units.meter
-
     box = Box()
     
     with pytest.raises(AssertionError):

@@ -21,7 +21,7 @@ Ir. E. van Vliet
 
 ## Examples:
 
-### Independent parameter
+### Independent parameters
 Below an example of how to organize the input parameters for a box object.
 
 ```python
@@ -61,23 +61,10 @@ class Box(ParameterSet):
 
 ```
 
-
-
-
-
-
-
-
-
-
-### Unit conversion
-
-
-
 ## No categorical data
-Categorical data, such as as choice between `GREEN`, `BLUE`, `YELLOW`, is deliberately not supported. 
+Categorical data, such as as choice between `GREEN`, `BLUE`, `YELLOW`, is deliberately not supported.
+The reason for this is that `carg-io` focusses on numerical values only, since only numerical values can be shown in a graph.
 
+Typically, digging deeper into categorical values, one will eventually find numerical values again. E.g. the colors `GREEN`, `BLUE` and `YELLOW` are actually wave lenghts 550, 450 and 580 nm.
 
-## Terminology
-Dependent versus independent variables
 
