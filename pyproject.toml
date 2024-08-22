@@ -4,7 +4,7 @@ requires = ["setuptools>=46.1.0", "setuptools_scm[toml]>=5", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "metis_blocks"
+name = "carg-io"
 description = "Parametrization made easy"
 authors = [{name = "E. van Vliet", email = "eelcovanvliet@gmail.com"}]
 # license = {file = "LICENSE.txt"}
@@ -13,6 +13,9 @@ requires-python = ">=3.11"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Programming Language :: Python",
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Visualization",
 ]
 # Add here dependencies of your project (line-separated), e.g. requests>=2.2,<3.0.
 # Version specifiers like >=2.2,<3.0 avoid problems due to API changes in
