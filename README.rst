@@ -160,8 +160,8 @@ value when converted to the same unit.
 It orginated as an alternative to using the python-native **dataclasses**, since **dataclasses** did not offer the
 functionality 
 
-`cargi-io` supports defining, setting and bookkeeping when working with sets of parameters.
-`cargi-io` originated as an alternative to using the python-native `dataclass`, since `dataclasses` did not really offer the functionality needed for parametric analyses.
+`carg-io` supports defining, setting and bookkeeping when working with sets of parameters.
+`carg-io` originated as an alternative to using the python-native `dataclass`, since `dataclasses` did not really offer the functionality needed for parametric analyses.
 
 ## Features
 
