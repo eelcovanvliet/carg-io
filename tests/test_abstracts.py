@@ -22,16 +22,16 @@ def test_parameter_set():
     assert box.Length['km'] == 1e-3
 
     
-def test_hash():
-    box = Box()
-    box.Height['m'] = 99
-    identical_box = Box()
+# def test_hash():
+#     box = Box()
+#     box.Height['m'] = 99
+#     identical_box = Box()
     
-    identical_box.Height['mm'] = 99_000
-    hash1 = hash(box)
-    hash2 = hash(identical_box)
-    assert hash1 == hash2 # the hash checks if the instance values are equal
-    assert box != identical_box # the instances themselves are not equal
+#     identical_box.Height['mm'] = 99_000
+#     hash1 = hash(box)
+#     hash2 = hash(identical_box)
+#     assert hash1 == hash2 # the hash checks if the instance values are equal
+#     assert box != identical_box # the instances themselves are not equal
 
 def test_pickle():
     box = Box()

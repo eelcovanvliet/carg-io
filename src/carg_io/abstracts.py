@@ -270,16 +270,16 @@ class ParameterSet(metaclass=MetaParameterSet):
         dictionary = self.to_dict()
         return dictionary[name]
 
-    def __hash__(self) -> hash:
-        """Per default, the hash of a ParameterSet is a frozenset containing the string representation
-        of the parameter names and their value.
-        The unit is NOT included, hence the value should always be represented in the initial
-        unit.
-        """
-        fz = []
-        for name, parm in self.to_dict().items():
-            fz.append(self.name + name + str(parm.normalized_value))
-        return hash(frozenset(fz))
+    # def __hash__(self) -> hash:
+    #     """Per default, the hash of a ParameterSet is a frozenset containing the string representation
+    #     of the parameter names and their value.
+    #     The unit is NOT included, hence the value should always be represented in the initial
+    #     unit.
+    #     """
+    #     fz = []
+    #     for name, parm in self.to_dict().items():
+    #         fz.append(self.name + name + str(parm.normalized_value))
+    #     return hash(frozenset(fz))
 
     def get_partial_hash(self, parameter_names:List[str]) -> hash:
         """Return the hash based on only the parameter names provided.
