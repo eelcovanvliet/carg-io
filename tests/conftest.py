@@ -14,3 +14,28 @@ class Box(ParameterSet):
     Length:Parameter = 1 * units.meter
     Width:Parameter = 1* units.meter
     Height:Parameter = 1* units.meter
+
+
+class Block(ParameterSet):
+    Length:Parameter = 1 * units.meter
+    Width:Parameter = 1 * units.meter
+    Height:Parameter = 1 * units.meter
+    Density:Parameter = 2 * units.kilogram / units.meter**3
+
+    @property
+    def Volume(self) -> Parameter:
+        l = self.Length['m']
+        w = self.Width['m']
+        h = self.Height['m']
+        return Parameter('Volume', l*w*h * units.meter**3)
+
+    @property
+    def Mass(self) -> Parameter:
+        v = self.Volume['m**3']
+        rho = self.Density['kg/m**3']
+        return Parameter('Mass', v*rho * units.kg)
+
+
+@pytest.fixture
+def block():
+    return Block()

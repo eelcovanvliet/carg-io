@@ -5,17 +5,17 @@ Any parametric analysis
 
 ## Features
 
-- Defining them
+**Essentials**
+- Defining parameter sets
 - Support units
 - Checking if a default value was changed
 - Checking parameter set equality
+- Defining dependent parameters
 
-
+**Expoort and visualization**
 - Visualizing input/output parameter sets
 - Export and load from conventional formats (pandas DataFrame)
 - Tkinter representation
-
-- Defining dependent parameters
 
 
 `carg-io` originated as an alternative to using the python-native `dataclass`, since `dataclasses` did not really offer the functionality needed for parametric analyses.
@@ -37,10 +37,10 @@ class Block(ParameterSet):
 ```
 
 `Block` is a set of 4 Parameters with each a default value and a default unit.
-While developing, most IDE will auto-complete the namespaces, allowing for faster development.
+Using this structure will allow typical IDEs to auto-complete the namespaces, allowing for faster development.
 
 When making an instance of `Block`, it will always be created with default values.
-Then can be changed at will after. When changing (=setting) a parameter, always specify the unit in square brackets:
+They can be changed at will after. When changing (=setting) a parameter, always specify the unit in square brackets:
 
 ```python
 block = Block()
@@ -55,14 +55,9 @@ print(f"Length in foot is: {l}")
 ```
 
 
-
-
-
-
-
-### Creating dependent parameters
-Your normal parameters are *independent*, i.e. they are at the core of what defines a `Block`.
-In the example below, `Block.Volume` is a *dependent* parameter, in that it is fully defined by the length, width and height of the block.
+### Dependent parameters
+Typical parameters are *independent*, i.e. they are at the core of what defines a `Block`.
+In the example below, `Block.Volume` and `Block.Mass` are *dependent* parameters, in that theya are fully defined by the length, width, height and density of the block.
 
 ```python
 from carg_io import ParameterSet, Parameter, units
@@ -73,22 +68,27 @@ class Block(ParameterSet):
     Height:Parameter = 1 * units.meter
     Density:Parameter = 2 * units.kilogram / units.meter**3
 
+    @property
     def Volume(self) -> Parameter:
         l = self.Length['m']
         w = self.Width['m']
         h = self.Height['m']
         return Parameter('Volume', l*w*h * units.meter**3)
 
+    @property
     def Mass(self) -> Parameter:
         v = self.Volume['m**3']
         rho = self.Density['kg/m**3']
-        
         return Parameter('Mass', v*rho * units.kg)
 
-if __name__ == "__main__":
-    block = Block()
-    block.Length['m'] = 2
-    assert block.Mass['t'] == 2000
+```
+
+This ensures that, even though volume and mass are not essential characteristic of Block, they are conveniently available.
+
+```python
+block = Block()
+block.Length['m'] = 2
+assert block.Mass['t'] == 2000
 
 ```
 
