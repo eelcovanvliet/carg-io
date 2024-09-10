@@ -1,7 +1,9 @@
 # Carg-io
 
 `carg-io` helps ease working with sets of parameters.
-Any parametric analysis
+Specifically, in the field of engineering: if it's worth automating, it's worth parametrizing.
+This means that *if* you tackled the hard part (finding and programming a solution), it would be a shame to get lost in all your input and output. I/O should be just cargo.
+
 
 ## Features
 
@@ -12,18 +14,17 @@ Any parametric analysis
 - Checking parameter set equality
 - Defining dependent parameters
 
-**Expoort and visualization**
+**Export and visualization**
 - Visualizing input/output parameter sets
 - Export and load from conventional formats (pandas DataFrame)
 - Tkinter representation
-
 
 `carg-io` originated as an alternative to using the python-native `dataclass`, since `dataclasses` did not really offer the functionality needed for parametric analyses.
 
 ## Basic use
 
-### Parameters and ParameterSet
-Below an example of how to organize the parameters for a block object.
+### Definition and creation
+Below an example of how to organize the parameters for a `block` object.
 
 
 ```python
@@ -82,20 +83,6 @@ for block in blocks:
 Be aware though that combinations like these tend to grow very quickly.
 After the problem is properly automated, there is wisdom in *what* to analyze exactly.
 
-### Spaces
-
-Taking the parametrization one step further, we introduce `Space`.
-
-```python
-s = Space(Block)
-s.expand(Block.Length, "m", [1,2,3])
-s.expand(Block.Width, "m", [1,2,3])
-s.expand(Block.Height, "m", [1,2,3])
-assert len(s) == 9
-
-```
-
-
 
 ### Dependent parameters
 Typical parameters are *independent*, i.e. they are at the core of what defines a `Block`.
@@ -133,6 +120,45 @@ block.Length['m'] = 2
 assert block.Mass['t'] == 2000
 
 ```
+
+### Spaces
+
+Taking the parametrization one step further, we introduce `Space`.
+
+```python
+s = Space(Block)
+s.expand(Block.Length, "m", [1,2,3])
+s.expand(Block.Width, "m", [1,2,3])
+s.expand(Block.Height, "m", [1,2,3])
+assert len(s) == 9
+
+```
+Note that `Space` accepts a *class*, not an *instance*.
+
+#### Criteria
+At times, it's conveniet to filter spaces based on some characteristic.
+It would be a bit illogical to filter based on a value of an independent parameters; just do not expand it beyond the criteria. But filtering based on *dependent* parameters *does* make sense.
+
+```python
+s = Space(Block)
+s.expand(Block.Length, "m", [1,2,3])
+s.expand(Block.Width, "m", [1,2,3])
+s.expand(Block.Height, "m", [1,2,3])
+s.expand(Block.Density, "m", [2])
+s.add_criteria(Block.Mass, "kg", lambda m: m < 54)
+
+assert len(s) == 26
+```
+In the example above, the largest block is 3x3x3 and has a mass of 54 kg.
+The criteria will filter out this block, and hence, the number of parameter sets represented in the space is 26.
+
+
+<!-- #### Uniformity
+In the previous section, we discarded a single parameter set.
+This means that, even though the space was initially expanded linearly in all directions (a uniform space), it no longer is.
+This has implications for your results, e.g. it may lead to survivor bias. -->
+
+
 
 ## No categorical data
 Categorical data, such as as choice between `GREEN`, `BLUE`, `YELLOW`, is deliberately not supported.
