@@ -92,6 +92,15 @@ class Parameter():
         nvalue = Decimal(value).normalize()
         return nvalue
 
+    def __eq__(self, other: Parameter) -> bool:
+        """Test if two parameters are equal. Equality is defined as having the same value
+        when converted to the same unit."""
+        ud = self._unit_default
+        return self[ud] == other[ud]
+
+
+    def __ne__(self, other: Parameter) -> bool:
+        return not self == other
 
     def __getitem__(self, unit:str|pint.Unit) -> pint.Quantity:
         """Get the value in the requested unit. For dimensionless units, use
@@ -230,6 +239,8 @@ class ParameterSet(metaclass=MetaParameterSet):
         """Return a deepcopy of self."""
         return deepcopy(self)
     
+    def __eq__(self, other: ParameterSet) -> bool:
+        return all(p == other[p.name] for p in self)
     
     def _to_tk(self, context, state='normal'):
         """Return as tk representation
