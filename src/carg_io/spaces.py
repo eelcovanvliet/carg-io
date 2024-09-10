@@ -1,6 +1,7 @@
-from .abstracts import ParameterSet, Parameter, units
+from .abstracts import ParameterSet, Parameter, units, MetaParameterSet
 import itertools
 from typing import Iterable, List, Tuple, Dict
+from inspect import isclass
 
 class Space:
     """Space facilitates constructing large parameter input spaces"""
@@ -9,8 +10,9 @@ class Space:
     _criteria = []
 
     def __init__(self, parameter_set:ParameterSet) -> None:
-        # if not issubclass(type(parameter_set), ParameterSet):
-        #     raise TypeError(f'Expected ParameterSet, got {type(parameter_set)}')
+        if not issubclass(type(parameter_set), MetaParameterSet):
+            if isinstance(parameter_set, ParameterSet):
+                raise TypeError(f"Space expects the class, not an instance of {type(parameter_set)}")
         self.parameter_set = parameter_set
 
     def expand(self, parameter:str|Parameter, unit:str, space:Iterable[float|int]):

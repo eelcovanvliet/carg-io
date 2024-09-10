@@ -54,6 +54,48 @@ l = block.Length['foot']
 print(f"Length in foot is: {l}")
 ```
 
+### Parametrization
+
+Parametrizing an analysis can be done using standard iteration tools, e.g.:
+
+```python
+from itertools import product
+
+# Generate a bunch of parameter set instances
+blocks = []
+for l, w, h in product([1,2,3], [1,2,3], [1,2,3]):
+    block = Block()
+    block.Length["m"] = l
+    block.Width["m"] = w
+    block.Height["m"] = h
+    blocks.append(block)
+
+# For each parameters set, perform a calculation
+for block in blocks:
+    wall_area = \
+        2 * block.Length["m"] * block.Height["m"] + \
+        2 * block.Width["m"] * block.Height["m"] + \
+    print(wall_area)
+
+```
+
+Be aware though that combinations like these tend to grow very quickly.
+After the problem is properly automated, there is wisdom in *what* to analyze exactly.
+
+### Spaces
+
+Taking the parametrization one step further, we introduce `Space`.
+
+```python
+s = Space(Block)
+s.expand(Block.Length, "m", [1,2,3])
+s.expand(Block.Width, "m", [1,2,3])
+s.expand(Block.Height, "m", [1,2,3])
+assert len(s) == 9
+
+```
+
+
 
 ### Dependent parameters
 Typical parameters are *independent*, i.e. they are at the core of what defines a `Block`.

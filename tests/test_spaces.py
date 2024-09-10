@@ -1,7 +1,7 @@
 import pytest
 from carg_io.abstracts import Parameter, ParameterSet, units, NaN
 from carg_io.spaces import Space
-from conftest import block_space
+from conftest import block_space, Block
 import numpy as np
 
 __author__ = "eelco van Vliet"
@@ -20,4 +20,7 @@ def test_criteria(block_space):
     assert len(block_space) == 10**3-4
     
 
-
+def test_init_type_error():
+    instance = Block()
+    with pytest.raises(TypeError):
+        s = Space(instance)
