@@ -34,7 +34,12 @@ class MetaParameterSet(type):
         # Extend with own parameters
         
         for name, val in clsdict.items():
-            if not name.startswith('_'):
+            import types
+            if callable(val):#isinstance(val, types.MethodType):
+                # Dependent parameter
+                pass
+            elif not name.startswith('_'):
+                # Independent parameter
                 if isinstance(val, property):
                     continue # @property may be used to create dependent Parameter
                 clsdict[name] = Parameter(name, val) # Value->Parameter substitution
