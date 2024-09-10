@@ -9,6 +9,8 @@
 
 import pytest
 from carg_io.abstracts import Parameter, ParameterSet, units, NaN
+from carg_io.spaces import Space
+import numpy as np
 
 class Box(ParameterSet):
     Length:Parameter = 1 * units.meter
@@ -39,3 +41,12 @@ class Block(ParameterSet):
 @pytest.fixture
 def block():
     return Block()
+
+
+@pytest.fixture
+def block_space(block):
+    space = Space(Block)
+    space.expand(Block.Length, 'm', np.linspace(1,10,10))
+    space.expand(Block.Width, 'm', np.linspace(1,10,10))
+    space.expand(Block.Height, 'm', np.linspace(1,10,10))
+    return space
