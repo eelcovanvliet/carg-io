@@ -1,7 +1,6 @@
 from .abstracts import ParameterSet, Parameter, units, MetaParameterSet
 import itertools
 from typing import Iterable, List, Tuple, Dict
-from inspect import isclass
 
 class Space:
     """Space facilitates constructing large parameter input spaces"""
