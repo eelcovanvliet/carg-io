@@ -6,14 +6,6 @@ from random import randint
 import numpy as np
 import itertools
 
-__author__ = "eelco van Vliet"
-__copyright__ = "eelco van Vliet"
-__license__ = "MIT"
-
-
-TEMP = Path(__file__).parent / 'temp'
-TEMP.mkdir(exist_ok=True)
-
 
 def test_post_process():
     

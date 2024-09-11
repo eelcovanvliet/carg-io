@@ -4,10 +4,6 @@ from carg_io.spaces import Space
 from conftest import block_space, Block
 import numpy as np
 
-__author__ = "eelco van Vliet"
-__copyright__ = "eelco van Vliet"
-__license__ = "MIT"
-
 
 def test_space(block_space):
     assert len(block_space) == 10**3

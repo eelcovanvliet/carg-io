@@ -3,9 +3,7 @@ from carg_io.abstracts import Parameter, ParameterSet, units, NaN
 from conftest import Box, block
 from carg_io.abstracts import SettingAttributeNotAllowed
 
-__author__ = "eelco van Vliet"
-__copyright__ = "eelco van Vliet"
-__license__ = "MIT"
+
 
 
 def test_parameter1():
