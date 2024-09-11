@@ -57,7 +57,6 @@ def test_set_not_equality():
     box2.Length["m"] = 123
     assert not box1 == box2
 
-
 def test_setting_parm_error():
     box1 = Box()
     with pytest.raises(SettingAttributeNotAllowed):
@@ -65,3 +64,12 @@ def test_setting_parm_error():
 
 def test_dependent_parm(block):
     assert block.Mass["pounds"]
+
+def test_default_value(block):
+    """Test that setting a value changes the 'is_default' attribute
+    from True to False."""
+    assert block.Length.is_default
+    block.Length["m"] = block.Length["m"] + 1
+    assert not block.Length.is_default
+
+
