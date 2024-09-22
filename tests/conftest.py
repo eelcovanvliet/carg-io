@@ -37,6 +37,11 @@ class Block(ParameterSet):
         rho = self.Density['kg/m**3']
         return Parameter('Mass', v*rho * units.kg)
 
+    @property
+    def LengthWidthRatio(self) -> Parameter:
+        l = self.Length['m']
+        w = self.Width['m']
+        return Parameter('LengthWidthRatio', l/w * units.dimensionless)
 
 @pytest.fixture
 def block():

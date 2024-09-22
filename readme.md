@@ -55,6 +55,28 @@ l = block.Length['foot']
 print(f"Length in foot is: {l}")
 ```
 
+### Dimensionless parameters
+Units *have to be specified* when getting of setting Parameter values.
+Imagine `Block` would have a length/width ratio Parameter. In this case you should use `None` to indicate the dimensionless unit:
+
+```python
+class Block(ParameterSet):
+    LengthWidthRatio = 1 * units.dimensionless
+
+block.LengthWidthRatio[None] = 1.2
+print(block.LengthWidthRatio[None])
+
+```
+
+Alternatively, using `:` is also supported:
+
+```python
+block.LengthWidthRatio[:] = 1.2
+print(block.LengthWidthRatio[:])
+
+```
+
+
 ### Parametrization
 
 Parametrizing an analysis can be done using standard iteration tools, e.g.:

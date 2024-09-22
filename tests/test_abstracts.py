@@ -19,7 +19,10 @@ def test_parameter_set():
     box = Box()
     assert box.Length['km'] == 1e-3
 
-    
+def test_parameter_get_dimensionless(block):
+    assert isinstance(block.LengthWidthRatio[None], float)
+    assert isinstance(block.LengthWidthRatio[:], float)
+
 # def test_hash():
 #     box = Box()
 #     box.Height['m'] = 99
