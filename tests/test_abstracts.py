@@ -72,4 +72,7 @@ def test_default_value(block):
     block.Length["m"] = block.Length["m"] + 1
     assert not block.Length.is_default
 
+def test_repr(block):
+    assert block.__repr__() == "ParameterSet(name='Block')"
+
 

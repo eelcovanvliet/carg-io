@@ -269,6 +269,9 @@ class ParameterSet(metaclass=MetaParameterSet):
     def __getitem__(self, name:str):
         dictionary = self.to_dict()
         return dictionary[name]
+    
+    def __repr__(self):
+        return f"ParameterSet(name='{self.name}')"
 
     # def __hash__(self) -> hash:
     #     """Per default, the hash of a ParameterSet is a frozenset containing the string representation
