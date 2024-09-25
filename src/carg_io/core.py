@@ -253,6 +253,8 @@ class Parameter:
         Parameter[None] or Parameter[:].
         """
         # Check dimensionality
+        if not unit:
+            unit = units.dimensionless
         try:
             self._value.m_as(unit)
         except pint.errors.DimensionalityError:
