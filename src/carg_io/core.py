@@ -57,108 +57,6 @@ class MetaParameterSet(type):
         return super().__new__(cls, clsname, bases, clsdict)
 
 
-class Parameter:
-    """The Parameter class offers a lot of functionality aound a single value.
-    The value may be an input or an output value.
-    It supports both input and output parameters.
-    It uses Pint to support units and their conversion.
-
-    - Getting and setting values using different units
-    - Store a default value, and remember if it was changed
-    - `Tkinter` `entry` representation
-
-    ```python
-    from carg_io import Parameter, units
-    height = Parameter('height', 1.93 * units.meter)
-    ```
-    """
-
-    def __init__(self, name, value: pint.Quantity | float | int):
-        """Create a Parameter instance with value.
-
-        value: Either a pint.Quantity, int or float. If int or float, the value will be
-                converted into a dimensionless pint.Quantity.
-
-        """
-        if not isinstance(value, pint.Quantity):
-            try:
-                float(value)
-                value = pint.Quantity(value)  # Make dimensionless
-            except Exception as err:
-                raise TypeError(f"Parameter expect a number-like value, got {value}")
-
-        self.name = name
-        self._value = value
-        self._unit_default = value.u  # default unit
-        self.is_default = True
-
-    @property
-    def normalized_value(self) -> float | int:
-        """The normalized value of a `Parameter` is the value represented in the default unit.
-        Any resulting zero decimals (as result of a unit conversion) are dropper (normalized).
-        """  # doctag[normalized_value]
-        value = self._value.m_as(self._unit_default)
-        nvalue = Decimal(value).normalize()
-        return nvalue
-
-    def __eq__(self, other: Parameter) -> bool:
-        """Test if two parameters are equal. Equality is defined as having the same value
-        when converted to the same unit."""
-        ud = self._unit_default
-        return self[ud] == other[ud]
-
-    def __ne__(self, other: Parameter) -> bool:
-        return not self == other
-
-    def __getitem__(self, unit: str | pint.Unit) -> pint.Quantity:
-        """Get the value in the requested unit. For dimensionless units, use
-        Parameter[None] or Parameter[:].
-        """
-        if unit == None or isinstance(unit, slice):
-            return self._value.m
-        return self._value.m_as(unit)
-
-    def __setitem__(self, unit: str | pint.Unit, value: float | int):
-        """Set the value with the requested unit. For dimensionless units, use
-        Parameter[None] or Parameter[:].
-        """
-        # Check dimensionality
-        try:
-            self._value.m_as(unit)
-        except pint.errors.DimensionalityError:
-            raise ValueError(
-                f"Trying to set {str(unit)} on parameter {self.name} that has base unit {str(self._unit_default)}"
-            )
-
-        self._value = ureg.Quantity(value, unit)
-        self.is_default = False
-
-    def _to_tk(self, root) -> Tuple[tk.Label, tk.Entry, tk.Labe]:
-        """Return tkinter representation consiting of 2 labels (name and unit)
-        and an entry field.
-
-        Input:
-            tkinter container entity
-
-        Returns:
-            Label(name), Entry(value), Label(unit)
-
-        """
-
-        name_label = tk.Label(root, text=self.name, anchor="w", width=22)
-
-        entry = tk.Entry(root, bd=1, width=12)
-        entry.insert(0, self._value.m)
-        unit = str(self._value.u)
-        if unit == "dimensionless":
-            unit = "-"
-        unit_label = tk.Label(root, text=unit, anchor="w", width=17)
-        return name_label, entry, unit_label
-
-    def __repr__(self):
-        return f"Parameter(name='{self.name}'', value={self._value})"
-
-
 class SettingAttributeNotAllowed(Exception):
     pass
 
@@ -304,3 +202,106 @@ class ParameterSet(metaclass=MetaParameterSet):
             string = self.name + name + str(parm.normalized_value)
             stack.append(string)
         return hash(frozenset(stack))
+
+
+class Parameter:
+    """The Parameter class offers a lot of functionality aound a single value.
+    The value may be an input or an output value.
+    It supports both input and output parameters.
+    It uses Pint to support units and their conversion.
+
+    - Getting and setting values using different units
+    - Store a default value, and remember if it was changed
+    - `Tkinter` `entry` representation
+
+    ```python
+    from carg_io import Parameter, units
+    height = Parameter('height', 1.93 * units.meter)
+    ```
+    """
+
+    def __init__(self, name, value: pint.Quantity | float | int):
+        """Create a Parameter instance with value.
+
+        value: Either a pint.Quantity, int or float. If int or float, the value will be
+                converted into a dimensionless pint.Quantity.
+
+        """
+        if not isinstance(value, pint.Quantity):
+            try:
+                float(value)
+                value = pint.Quantity(value)  # Make dimensionless
+            except Exception as err:
+                raise TypeError(f"Parameter expect a number-like value, got {value}")
+
+        self.name = name
+        self._value = value
+        self._unit_default = value.u  # default unit
+        self.is_default = True
+
+    @property
+    def normalized_value(self) -> float | int:
+        """The normalized value of a `Parameter` is the value represented in the default unit.
+        Any resulting zero decimals (as result of a unit conversion) are dropper (normalized).
+        """  # doctag[normalized_value]
+        value = self._value.m_as(self._unit_default)
+        nvalue = Decimal(value).normalize()
+        return nvalue
+
+    def __eq__(self, other: Parameter) -> bool:
+        """Test if two parameters are equal. Equality is defined as having the same value
+        when converted to the same unit."""
+        ud = self._unit_default
+        return self[ud] == other[ud]
+
+    def __ne__(self, other: Parameter) -> bool:
+        return not self == other
+
+    def __getitem__(self, unit: str | pint.Unit) -> pint.Quantity:
+        """Get the value in the requested unit. For dimensionless units, use
+        Parameter[None] or Parameter[:].
+        """
+        if unit == None or isinstance(unit, slice):
+            return self._value.m
+        return self._value.m_as(unit)
+
+    def __setitem__(self, unit: str | pint.Unit, value: float | int):
+        """Set the value with the requested unit. For dimensionless units, use
+        Parameter[None] or Parameter[:].
+        """
+        # Check dimensionality
+        try:
+            self._value.m_as(unit)
+        except pint.errors.DimensionalityError:
+            raise ValueError(
+                f"Trying to set {str(unit)} on parameter {self.name} that has base unit {str(self._unit_default)}"
+            )
+
+        self._value = ureg.Quantity(value, unit)
+        self.is_default = False
+
+    def _to_tk(self, root) -> Tuple[tk.Label, tk.Entry, tk.Labe]:
+        """Return tkinter representation consiting of 2 labels (name and unit)
+        and an entry field.
+
+        Input:
+            tkinter container entity
+
+        Returns:
+            Label(name), Entry(value), Label(unit)
+
+        """
+
+        name_label = tk.Label(root, text=self.name, anchor="w", width=22)
+
+        entry = tk.Entry(root, bd=1, width=12)
+        entry.insert(0, self._value.m)
+        unit = str(self._value.u)
+        if unit == "dimensionless":
+            unit = "-"
+        unit_label = tk.Label(root, text=unit, anchor="w", width=17)
+        return name_label, entry, unit_label
+
+    def __repr__(self):
+        return f"Parameter(name='{self.name}'', value={self._value})"
+
