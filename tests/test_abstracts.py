@@ -1,6 +1,6 @@
 import pytest
 from carg_io.core import Parameter, ParameterSet, units, NaN
-from conftest import Box, block
+from conftest import Box, block, specialized_block
 from carg_io.core import SettingAttributeNotAllowed
 
 
@@ -79,3 +79,7 @@ def test_repr(block):
     assert block.__repr__() == "ParameterSet(name='Block')"
 
 
+def test_inheritance(specialized_block):
+    assert isinstance(specialized_block.FilledPercentage[None], (int, float))
+    specialized_block.FilledPercentage[None] = 0
+    assert specialized_block.Mass["kg"] == 0

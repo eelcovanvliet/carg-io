@@ -55,3 +55,18 @@ def block_space(block):
     space.expand(Block.Width, 'm', np.linspace(1,10,10))
     space.expand(Block.Height, 'm', np.linspace(1,10,10))
     return space
+
+
+class SpecializedBlock(Block):
+    FilledPercentage: Parameter = 100 * units.dimensionless
+
+    @property
+    def Mass(self) -> Parameter:
+        v = self.Volume['m**3']
+        rho = self.Density['kg/m**3']
+        f = self.FilledPercentage[None]
+        return Parameter('Mass', v*rho*f * units.kg)
+
+@pytest.fixture
+def specialized_block():
+    return SpecializedBlock()
