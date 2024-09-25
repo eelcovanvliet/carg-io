@@ -15,4 +15,4 @@ except PackageNotFoundError:  # pragma: no cover
 finally:
     del version, PackageNotFoundError
 
-from .abstracts import Parameter, ParameterSet, units
+from .core import Parameter, ParameterSet, units

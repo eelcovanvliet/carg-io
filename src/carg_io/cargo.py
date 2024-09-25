@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import List
-from .abstracts import ParameterSet
+from .core import ParameterSet
 import zipfile
 from pathlib import Path
 import tkinter as tk

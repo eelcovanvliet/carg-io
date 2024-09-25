@@ -1,6 +1,6 @@
 import pytest
 from pathlib import Path
-from carg_io.abstracts import Parameter, ParameterSet, units, NaN
+from carg_io.core import Parameter, ParameterSet, units, NaN
 from carg_io.postprocessing import Analyze
 from random import randint
 import numpy as np

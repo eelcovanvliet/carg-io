@@ -9,7 +9,7 @@ from bokeh.palettes import Spectral6, Spectral11, Turbo256
 from bokeh.layouts import row, column
 from bokeh.models import DataTable, DateFormatter, TableColumn, ColorBar, Circle
 from bokeh.io import show as show_in_bokeh
-from .abstracts import ParameterSet, Parameter, units
+from .core import ParameterSet, Parameter, units
 from typing import List, Type
 import pandas as pd
 

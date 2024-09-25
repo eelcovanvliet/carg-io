@@ -1,7 +1,7 @@
 import pytest
-from carg_io.abstracts import Parameter, ParameterSet, units, NaN
+from carg_io.core import Parameter, ParameterSet, units, NaN
 from conftest import Box, block
-from carg_io.abstracts import SettingAttributeNotAllowed
+from carg_io.core import SettingAttributeNotAllowed
 
 
 

@@ -8,7 +8,7 @@
 """
 
 import pytest
-from carg_io.abstracts import Parameter, ParameterSet, units, NaN
+from carg_io.core import Parameter, ParameterSet, units, NaN
 from carg_io.spaces import Space
 import numpy as np
 

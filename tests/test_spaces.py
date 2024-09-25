@@ -1,5 +1,5 @@
 import pytest
-from carg_io.abstracts import Parameter, ParameterSet, units, NaN
+from carg_io.core import Parameter, ParameterSet, units, NaN
 from carg_io.spaces import Space
 from conftest import block_space, Block
 import numpy as np

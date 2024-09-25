@@ -1,4 +1,4 @@
-from .abstracts import ParameterSet, Parameter, units, MetaParameterSet
+from .core import ParameterSet, Parameter, units, MetaParameterSet
 import itertools
 from typing import Iterable, List, Tuple, Dict
 
