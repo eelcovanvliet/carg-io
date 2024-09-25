@@ -1,7 +1,5 @@
 from __future__ import annotations
-import sys
-from abc import ABC, ABCMeta, abstractmethod
-from typing import Set, Callable, List, Dict, Tuple, Generator
+from typing import List, Dict, Tuple, Generator
 import pandas as pd
 import numpy as np
 from copy import deepcopy
@@ -10,6 +8,8 @@ import pint
 from decimal import Decimal
 from pathlib import Path
 import pickle
+
+from .execeptions import SettingAttributeNotAllowed
 
 units = ureg = pint.UnitRegistry()
 NaN = np.nan
@@ -55,10 +55,6 @@ class MetaParameterSet(type):
         clsdict["name"] = clsname
 
         return super().__new__(cls, clsname, bases, clsdict)
-
-
-class SettingAttributeNotAllowed(Exception):
-    pass
 
 
 class ParameterSet(metaclass=MetaParameterSet):
