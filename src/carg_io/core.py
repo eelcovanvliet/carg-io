@@ -16,10 +16,7 @@ NaN = np.nan
 
 
 class MetaParameterSet(type):
-    """
-    This type ensures that init ParameterSet creates NEW instances of all
-    input parameters.
-    """
+    """Constructor type for ParameterSets."""
 
     def __new__(cls, clsname, bases, clsdict):
 
@@ -90,10 +87,13 @@ class ParameterSet(metaclass=MetaParameterSet):
         """Return the dictionary representation of the instance.
 
         Parameters:
-            include_set_name:bool
+            include_set_name: bool
                 If true, prepend the ParameterSet name to its Parameter names.
                 This is useful when concatenating multiple ParameterSets with
                 overlapping Parameter names. Default is False.
+            
+            name_include_unit: bool
+                If True, prepend the unit in square brackets.
 
         """
         stack = []
@@ -201,20 +201,7 @@ class ParameterSet(metaclass=MetaParameterSet):
 
 
 class Parameter:
-    """The Parameter class offers a lot of functionality aound a single value.
-    The value may be an input or an output value.
-    It supports both input and output parameters.
-    It uses Pint to support units and their conversion.
-
-    - Getting and setting values using different units
-    - Store a default value, and remember if it was changed
-    - `Tkinter` `entry` representation
-
-    ```python
-    from carg_io import Parameter, units
-    height = Parameter('height', 1.93 * units.meter)
-    ```
-    """
+    """Parameter is typically used in context of a ParameterSet."""
 
     def __init__(self, name, value: pint.Quantity | float | int):
         """Create a Parameter instance with value.
@@ -239,7 +226,7 @@ class Parameter:
     def normalized_value(self) -> float | int:
         """The normalized value of a `Parameter` is the value represented in the default unit.
         Any resulting zero decimals (as result of a unit conversion) are dropper (normalized).
-        """  # doctag[normalized_value]
+        """
         value = self._value.m_as(self._unit_default)
         nvalue = Decimal(value).normalize()
         return nvalue
